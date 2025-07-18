@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Balance - Fundación Proteger</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <img src="img/logo.png" class="logo" alt="Logo">
+    <h1>📊 Balance Anual</h1>
+  </header>
+
+  <div class="contenedor">
+    <h2>Libro Diario</h2>
+    <div id="libroDiario"></div>
+
+    <h2>Resumen Anual</h2>
+    <p id="resumenAnual"></p>
+  </div>
+
+  <a href="index.html" class="volver">⬅ Volver</a>
+
+  <script>
+    function cargarLibroDiario() {
+      const movimientos = JSON.parse(localStorage.getItem('gastos')) || [];
+      const diario = document.getElementById('libroDiario');
+      diario.innerHTML = '';
+
+      let totalEntradas = 0;
+      let totalSalidas = 0;
+
+      movimientos.forEach(m => {
+        const div = document.createElement('div');
+        div.className = 'movimiento';
+        div.innerHTML = <strong>${m.tipo.toUpperCase()}</strong> - ${m.monto} | ${m.descripcion} | ${m.fecha};
+        diario.appendChild(div);
+
+        if (m.tipo === 'entrada') totalEntradas += parseFloat(m.monto);
+        else totalSalidas += parseFloat(m.monto);
+      });
+
+      document.getElementById('resumenAnual').innerHTML = `
+        Total Entradas: ${totalEntradas} <br>
+        Total Salidas: ${totalSalidas} <br>
+        <strong>Balance:</strong> ${totalEntradas - totalSalidas}
+      `;
+    }
+
+    cargarLibroDiario();
+  </script>
+</body>
+</html>
